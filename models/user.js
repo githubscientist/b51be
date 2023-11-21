@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     },
     updatedAt: Date,
+    notes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Note'
+        }
+    ]
 });
 
 // create a User model from the userSchema
