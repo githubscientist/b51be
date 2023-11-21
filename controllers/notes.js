@@ -69,7 +69,7 @@ notesRouter.get('/', async (request, response) => {
     // if the token is valid, find the document in the users collection that matches the decodedToken id value
     const user = await User.findById(decodedToken.id).populate('notes', {
         content: 1,
-        date: 1,
+        createdAt: 1,
     });
 
     // return the user's notes
