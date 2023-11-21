@@ -51,4 +51,29 @@ notesRouter.post('/', async (request, response) => {
     response.json({message: 'Note saved successfully', note: savedNote});
 });
 
+// get all the notes of the current user
+notesRouter.get('/', async (request, response) => {
+    // get the token from the Authorization header
+    const token = getTokenFrom(request);
+
+    // verify the token and decode it to find the user who sent it
+    const decodedToken = jwt.verify(token, config.JWT_SECRET);
+
+    // if the token is missing or invalid, return an error
+    if (!token || !decodedToken.id) {
+        return response.status(401).json({
+            error: 'token missing or invalid'
+        });
+    }
+
+    // if the token is valid, find the document in the users collection that matches the decodedToken id value
+    const user = await User.findById(decodedToken.id).populate('notes', {
+        content: 1,
+        date: 1,
+    });
+
+    // return the user's notes
+    response.json(user.notes);
+});
+
 module.exports = notesRouter;
